@@ -1,0 +1,39 @@
+server
+{
+        # Redirect all SSL
+        listen 80;
+        listen [::]:80;
+        return 301 https://$host$request_uri;
+}
+
+server
+{
+        # SSL configuration
+        root /var/www/html;
+
+        # Index Page
+        index index.php;
+        server_name reelix.h4ck.me; # managed by Certbot
+
+        location /
+        {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+
+        # Pass PHP scripts to FastCGI server
+        location ~ \.php$
+        {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+        }
+
+        # SSL Stuff (Certbot)
+        listen [::]:443 ssl ipv6only=on; # managed by Certbot
+        listen 443 ssl; # managed by Certbot
+        ssl_certificate /etc/letsencrypt/live/reelix.h4ck.me/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/reelix.h4ck.me/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
