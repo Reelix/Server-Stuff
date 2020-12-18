@@ -9,3 +9,5 @@ sudo apt install rlwrap
 sudo apt install grc
 # SQLMap
 sudo apt install sqlmap
+# pip3 for Python3
+sudo apt install python3-pip
