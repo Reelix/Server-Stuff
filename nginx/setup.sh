@@ -2,7 +2,7 @@
 # nginx
 sudo apt install nginx
 # php
-sudo apt install php7.4-fpm
+sudo apt install php8.0-fpm
 # certbot
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
