@@ -1,20 +1,48 @@
 # /etc/nginx/sites-available/default
 server
 {
-        # Redirect all SSL
+        # Check for incoming connections on port 80 (http)
         listen 80;
         listen [::]:80;
+
+        # Redirect to https
         return 301 https://$host$request_uri;
 }
 
 server
 {
-        # SSL configuration
-        root /var/www/html;
+       # https configuration
+        listen [::]:443 ssl http2 ipv6only=on;
+        listen 443 ssl http2;
 
+        # Make testssl happy (My pages are small enough)
+        gzip off;
+
+        # Fix missing Headers
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        add_header X-Frame-Options "SAMEORIGIN";
+        # This hash will need to be updated every time you alter your css
+        add_header Content-Security-Policy "default-src 'self' 'sha256-WB7fb6xrqNpm64HNiL3yCAkeYtX0XmDDpXcj/COHfxA=';" always;
+        add_header X-Content-Type-Options nosniff;
+        add_header Referrer-Policy "strict-origin";
+        add_header Permissions-Policy "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()";
+
+        # OCSP Stapling ---
+        # fetch OCSP records from URL in ssl_certificate and cache them
+        # This doesn't seem to work yet - Might fix later
+        ssl_stapling on;
+        ssl_stapling_verify on;
+        
+        # Disable nginx version display (Keeps nginx text - Just hides the numbers)
+        # You can techncially hide nginx, but you need to alter the src or pay -_-
+        server_tokens off;
+        
+        # The location of the root directory
+        root /var/www/html;
+        
         # Index Page
         index index.php;
-        server_name reelix.h4ck.me; # managed by Certbot
+        server_name reelix.h4ck.me;
 
         location /
         {
