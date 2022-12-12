@@ -1,1 +1,1 @@
-/usr/bin/sudo /usr/bin/certbot renew -q --nginx --force-renew --rsa-key-size 4096
+/usr/bin/sudo /usr/bin/certbot renew -q --nginx --force-renew --rsa-key-size 4096 --must-staple --staple-ocsp
